@@ -1,6 +1,6 @@
 # First_Motion_Polarity model
 
-### A SeisBench implementation of First-Motion Polarity (FMP) Determination model by Ross, Meier and Hauksson 2018 (https://doi.org/10.1029/2017JB015251)
+### A SeisBench implementation of First-Motion Polarity (FMP) Determination model by Ross, Meier and Hauksson (2018, https://doi.org/10.1029/2017JB015251)
 #### This repository includes:
 
 1. "FMP_seisbench.ipynb" = Jupyter Notebook demonstrating how to run the FMP SeisBench implementation (FMP_seisbench) on an example seismic event
