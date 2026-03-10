@@ -188,7 +188,8 @@ class FM_model(WaveformModel):
             mean polarity probability traces (mean_probabilities_of_classes),
             final polarity class label of the mean sliding window (mean_polarity_class), 
             and its corresponding probability value (mean_polarity_probability) for each station,
-            and a prediction warning (prediction_warning) if the prediction class is not very certain (when the maximum class probability is < min_class_accept_ratio * other class probability)
+            and a prediction warning (prediction_warning) if the prediction class is not very certain 
+            (when the maximum class probability is < min_class_accept_ratio * other class probability)
         """
         # supress pandas warnings
         warnings.simplefilter(action='ignore')
@@ -204,6 +205,8 @@ class FM_model(WaveformModel):
         classes = ['U','D','K']
 
         for sta in picktimes.station:
+            # reset flag warning for plotting
+            flag_warning = False
             # get the 3 probability traces for that station
             sta_traces = prob_traces.select(station=sta)
             probs = []
@@ -234,6 +237,7 @@ class FM_model(WaveformModel):
                     pol_prob = probs[sorted_idx[1]]
                     if pol_prob < ignore_unknown_warning_thresh:
                         picktimes.at[picktimes.loc[picktimes['station'] == sta].index[0],'prediction_warning'] = True
+                        flag_warning = True
             
             # get probabilities for Up/Down (no Unknown) and compute max/min
             prob_U = probs[classes.index('U')]
@@ -257,7 +261,10 @@ class FM_model(WaveformModel):
                 axs[0].set_ylabel('Amplitude')
                 axs[0].axvline((picktimes.loc[picktimes['station'] == sta].time.iloc[0]-cut_stream.select(station=sta)[0].stats.starttime)*cut_stream.select(station=sta)[0].stats.sampling_rate, color='red') # plot picktime
                 label_y_position = max(cut_stream.select(station=sta)[0].data)-(0.2*max(cut_stream.select(station=sta)[0].data))
-                axs[0].text(1,label_y_position,sta,fontweight='bold')
+                if flag_warning:
+                    axs[0].text(1,label_y_position,sta,fontweight='bold',color='red')
+                else:
+                    axs[0].text(1,label_y_position,sta,fontweight='bold')
                 axs[0].set_xlim([0,len(cut_stream.select(station=sta)[0])])
 
                 # 2nd subplot: Probability trace plots
@@ -271,7 +278,10 @@ class FM_model(WaveformModel):
                 axs[1].axvline(75,color='red')
                 axs[1].axvspan(25, 75, alpha=0.1,color='red')
                 label_y_position = 0.8
-                axs[1].text(1,label_y_position,'Label: ' + pol,fontweight='bold')
+                if flag_warning:
+                    axs[1].text(1,label_y_position,'Label: ' + pol + ' (WARNING)',fontweight='bold',color='red')
+                else:
+                    axs[1].text(1,label_y_position,'Label: ' + pol,fontweight='bold')
                 axs[1].set_ylim([0,1])
                 axs[1].set_xlim([0,len(prob_traces.select(station=sta)[0])])
                 plt.tight_layout()
