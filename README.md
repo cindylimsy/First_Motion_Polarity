@@ -8,4 +8,4 @@
 4. "fmp_seisbench.py" = Python module containing the SeisBench implementation of the FMP model, including a new function that generates probability traces using sliding windows for "Up/Down/Unknown" classes and produces a polarity classification using the mean probability within sliding windows +- 0.25 seconds around the P arrival pick time 
 5. "FMP_seisbench_requirements.txt" = text file containing Python package dependencies required to run the code
 
-If you find the code, data or results in this notebook useful, please consider citing the archived version of this repository (Zenodo), and the original paper by Ross, Meier and Hauksson (2018).
+If you find the code, data or results in this notebook useful, please consider citing the archived version of this repository (on Zenodo: doi:10.5281/zenodo.18938888), and the original paper by Ross, Meier and Hauksson (2018).
